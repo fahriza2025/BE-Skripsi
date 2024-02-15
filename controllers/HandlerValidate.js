@@ -31,7 +31,13 @@ export const validation = async (req, res) => {
     const reqUpdate = await Req.findOne({
       where: { validation_code },
     });
-    console.log(reqUpdate.createdAt);
+
+    const updateStatusSantri = await Santri.update(
+      { status: 0 },
+      {
+        where: { id: reqUpdate.student_id },
+      }
+    );
 
     const notif = await Notif.create({
       user_id: user.userId,
@@ -68,7 +74,7 @@ export const validationBack = async (req, res) => {
     }
 
     const updateCode = await Req.update(
-      { permission_status: 0, val_back_by: user.userId },
+      { status_req: 0, permission_status: 0, val_back_by: user.userId },
       {
         where: { validation_code },
       }

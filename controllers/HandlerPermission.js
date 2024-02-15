@@ -181,10 +181,28 @@ export const addPermission = async (req, res) => {
   const randomCode = generateRandomCode();
 
   try {
+    //Check Request Existed
+    const reqCheck = await Req.findOne({
+      where: {
+        student_id,
+        status_req: 1,
+      },
+    });
+
+    if (reqCheck) {
+      return res.status(400).json({
+        code: 400,
+        status: false,
+        msg: "Data Permission has been created. Please change.",
+      });
+    }
+    //END CHECK
+
+    //MAKE REQUEST
     const req = await Req.create({
       student_id,
       created_by: user.userId,
-      status_req: 0,
+      status_req: 1,
       start_permission,
       end_permission,
       validation_code: randomCode,
@@ -196,6 +214,9 @@ export const addPermission = async (req, res) => {
       permission_status: 0,
     });
 
+    //END REQUEST
+
+    //GET DATA FOR ASSOCIATED TO ANOTHER TABLE
     const santri = await Santri.findOne({
       where: { id: req.student_id },
     });
@@ -211,6 +232,7 @@ export const addPermission = async (req, res) => {
       message: `Permission created by ${user.name_pegawai} for ${santri.name_santri}`,
       isRead: 0,
     });
+    //END
 
     const parsedDataProfile = JSON.parse(JSON.stringify(alternatifKriteriaSub));
 
