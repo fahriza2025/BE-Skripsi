@@ -64,8 +64,9 @@ import {
   updatePermission,
   deletePermission,
 } from "../controllers/HandlerPermission.js";
-import { dashboardPage } from "../controllers/HandlerDashboard.js";
+import { dashboardAdmin } from "../controllers/HandlerDashboard.js";
 import { validation, validationBack } from "../controllers/HandlerValidate.js";
+import { generateReport } from "../controllers/HandlerReport.js";
 
 export const prefix = "/v1/api/";
 
@@ -80,10 +81,11 @@ router.delete(prefix + "logout", verifyToken, Logout);
 router.post(prefix + "action/calculatedROC", verifyToken, CalculatedROC);
 router.post(prefix + "result/CPI", verifyToken, calculatedCPIisNull);
 router.get(prefix + "result/CPI/:id", verifyToken, calculatedCPIByIdCalculated);
+router.get(prefix + "report", verifyToken, generateReport);
 
 //ROUTES FOR ADMINISTRATOR
 //API FOR DASHBOARD
-router.get(prefix + "dashboard", verifyToken, isAdmin, dashboardPage);
+router.get(prefix + "dashboard", verifyToken, dashboardAdmin);
 
 //API KRITERIA DAN SUB-KRITERIA
 router.get(prefix + "kriteria", getDataKriteria);
